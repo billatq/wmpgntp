@@ -1,0 +1,34 @@
+HKCR
+{
+	NoRemove CLSID
+	{
+		ForceRemove {36FB54BC-45C9-452A-9C1F-5F1B9A9CBCE3} = s 'WMPGNTP Class'
+		{
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+		}
+	}
+}
+HKEY_LOCAL_MACHINE
+{
+    NoRemove SOFTWARE
+    {
+        NoRemove Microsoft
+        {
+            NoRemove MediaPlayer
+            {
+                NoRemove UIPlugins
+                {
+                    ForceRemove {36FB54BC-45C9-452A-9C1F-5F1B9A9CBCE3}
+                    {
+                        val FriendlyName = s 'res://WMP-GNTP.dll/RT_STRING/#102'
+                        val Description = s 'res://WMP-GNTP.dll/RT_STRING/#103'
+                        val Capabilities = d '1073741825'
+                    }
+                }
+            }
+        }
+    }
+}
