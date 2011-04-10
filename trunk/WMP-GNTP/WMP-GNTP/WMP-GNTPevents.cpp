@@ -116,7 +116,7 @@ void CWMPGNTP::GrowlSong()
                                         notification.m_icon.InitWithFilePath(
                                                 actualPath);
                                     }
-                                    delete cacheEntryInfo;
+                                    delete[] cacheEntryInfo;
                                 }
                             }
                         }
