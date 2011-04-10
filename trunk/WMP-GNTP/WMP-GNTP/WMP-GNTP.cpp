@@ -7,7 +7,7 @@
 CWMPGNTP::CWMPGNTP()
 {
     m_dwAdviseCookie = 0;
-	m_growlClientRegistered = false;
+    m_growlClientRegistered = false;
 }
 
 CWMPGNTP::~CWMPGNTP()
@@ -41,18 +41,19 @@ HRESULT CWMPGNTP::SetCore(IWMPCore *pCore)
     m_spCore = pCore;
 
     // connect up the event interface
-    CComPtr<IConnectionPointContainer>  spConnectionContainer;
+    CComPtr < IConnectionPointContainer > spConnectionContainer;
 
-    hr = m_spCore->QueryInterface( &spConnectionContainer );
+    hr = m_spCore->QueryInterface(&spConnectionContainer);
 
     if (SUCCEEDED(hr))
     {
-        hr = spConnectionContainer->FindConnectionPoint( __uuidof(IWMPEvents), &m_spConnectionPoint );
+        hr = spConnectionContainer->FindConnectionPoint(__uuidof(IWMPEvents),
+                &m_spConnectionPoint);
     }
 
     if (SUCCEEDED(hr))
     {
-        hr = m_spConnectionPoint->Advise( GetUnknown(), &m_dwAdviseCookie );
+        hr = m_spConnectionPoint->Advise(GetUnknown(), &m_dwAdviseCookie);
 
         if ((FAILED(hr)) || (0 == m_dwAdviseCookie))
         {
@@ -60,34 +61,35 @@ HRESULT CWMPGNTP::SetCore(IWMPCore *pCore)
         }
     }
 
-	// Set up growl notifications
-	// TODO: Set this up as a member variable
-	CAtlArray<GrowlNotificationType> notificationTypes;
-	notificationTypes.Add(GrowlNotificationType(L"Item Changed"));
+    // Set up growl notifications
+    // TODO: Set this up as a member variable
+    CAtlArray < GrowlNotificationType > notificationTypes;
+    notificationTypes.Add(GrowlNotificationType(L"Item Changed"));
 
-	// Create Icon Resource and compute hash
-	GrowlResource applicationIcon;
-	applicationIcon.m_isRemote = false;
+    // Create Icon Resource and compute hash
+    GrowlResource applicationIcon;
+    applicationIcon.m_isRemote = false;
 
-	// Try to read a fancy resource from WMP. If that fails, fallback.
-	HRESULT growlHr = Util::ReadWMPResourceData(L"GERERIC_DRAG_OTHER.PNG",  MAKEINTRESOURCE(257), applicationIcon.m_data);
-	if (FAILED(growlHr))
-	{
-		Util::ReadResourceData(IDR_GROWLICON, applicationIcon.m_data);
-	}
-	Util::MD5HashData(applicationIcon.m_data, applicationIcon.m_dataHash);
+    // Try to read a fancy resource from WMP. If that fails, fallback.
+    HRESULT growlHr = Util::ReadWMPResourceData(L"GERERIC_DRAG_OTHER.PNG",
+            MAKEINTRESOURCE(257), applicationIcon.m_data);
+    if (FAILED(growlHr))
+    {
+        Util::ReadResourceData(IDR_GROWLICON, applicationIcon.m_data);
+    }
+    Util::MD5HashData(applicationIcon.m_data, applicationIcon.m_dataHash);
 
-	// Add to the global list of resources
-	m_growlClient.m_growlResources.Add(applicationIcon);
+    // Add to the global list of resources
+    m_growlClient.m_growlResources.Add(applicationIcon);
 
-	// Try to Register for growl
-	GrowlRegistration registration(L"WMP-GNTP", notificationTypes);
-	registration.m_applicationIcon = applicationIcon;
-	growlHr = m_growlClient.Register(registration);
-	if (SUCCEEDED(growlHr))
-	{
-		m_growlClientRegistered = true;
-	}
+    // Try to Register for growl
+    GrowlRegistration registration(L"WMP-GNTP", notificationTypes);
+    registration.m_applicationIcon = applicationIcon;
+    growlHr = m_growlClient.Register(registration);
+    if (SUCCEEDED(growlHr))
+    {
+        m_growlClientRegistered = true;
+    }
 
     return hr;
 }
@@ -120,7 +122,8 @@ HRESULT CWMPGNTP::GetProperty(const WCHAR *pwszName, VARIANT *pvarProperty)
     return E_NOTIMPL;
 }
 
-HRESULT CWMPGNTP::SetProperty(const WCHAR *pwszName, const VARIANT *pvarProperty)
+HRESULT CWMPGNTP::SetProperty(const WCHAR *pwszName,
+        const VARIANT *pvarProperty)
 {
     return E_NOTIMPL;
 }

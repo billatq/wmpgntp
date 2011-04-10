@@ -13,35 +13,39 @@
 // {36FB54BC-45C9-452A-9C1F-5F1B9A9CBCE3}
 DEFINE_GUID(CLSID_WMPGNTP, 0x36fb54bc, 0x45c9, 0x452a, 0x9c, 0x1f, 0x5f, 0x1b, 0x9a, 0x9c, 0xbc, 0xe3);
 
-class ATL_NO_VTABLE CWMPGNTP : 
-    public CComObjectRootEx<CComSingleThreadModel>,
-    public CComCoClass<CWMPGNTP, &CLSID_WMPGNTP>,
-    public IWMPEvents,
-    public IWMPPluginUI
+class ATL_NO_VTABLE CWMPGNTP :
+public CComObjectRootEx<CComSingleThreadModel>,
+public CComCoClass<CWMPGNTP, &CLSID_WMPGNTP>,
+public IWMPEvents,
+public IWMPPluginUI
 {
 public:
     CWMPGNTP();
     ~CWMPGNTP();
 
-DECLARE_REGISTRY_RESOURCEID(IDR_WMPGNTP)
+    DECLARE_REGISTRY_RESOURCEID(IDR_WMPGNTP)
 
-DECLARE_PROTECT_FINAL_CONSTRUCT()
+    DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-BEGIN_COM_MAP(CWMPGNTP)
+    BEGIN_COM_MAP(CWMPGNTP)
     COM_INTERFACE_ENTRY(IWMPEvents)
     COM_INTERFACE_ENTRY(IWMPPluginUI)
-END_COM_MAP()
+    END_COM_MAP()
 
     // CComCoClass methods
     HRESULT FinalConstruct();
-    void    FinalRelease();
+    void FinalRelease();
 
     // IWMPPluginUI methods
     STDMETHODIMP SetCore(IWMPCore *pCore);
-    STDMETHODIMP Create(HWND hwndParent, HWND *phwndWindow) { return E_NOTIMPL; }
-    STDMETHODIMP Destroy() { return E_NOTIMPL; }
-    STDMETHODIMP TranslateAccelerator(LPMSG lpmsg) { return E_NOTIMPL; }
-    STDMETHODIMP DisplayPropertyPage(HWND hwndParent) { return E_NOTIMPL; }
+    STDMETHODIMP Create(HWND hwndParent, HWND *phwndWindow)
+    {   return E_NOTIMPL;}
+    STDMETHODIMP Destroy()
+    {   return E_NOTIMPL;}
+    STDMETHODIMP TranslateAccelerator(LPMSG lpmsg)
+    {   return E_NOTIMPL;}
+    STDMETHODIMP DisplayPropertyPage(HWND hwndParent)
+    {   return E_NOTIMPL;}
     STDMETHODIMP GetProperty(const WCHAR *pwszName, VARIANT *pvarProperty);
     STDMETHODIMP SetProperty(const WCHAR *pwszName, const VARIANT *pvarProperty);
 
@@ -68,8 +72,8 @@ END_COM_MAP()
     void STDMETHODCALLTYPE CurrentMediaItemAvailable( BSTR bstrItemName );
     void STDMETHODCALLTYPE CurrentItemChange( IDispatch *pdispMedia);
     void STDMETHODCALLTYPE MediaCollectionChange();
-    void STDMETHODCALLTYPE MediaCollectionAttributeStringAdded( BSTR bstrAttribName,  BSTR bstrAttribVal );
-    void STDMETHODCALLTYPE MediaCollectionAttributeStringRemoved( BSTR bstrAttribName,  BSTR bstrAttribVal );
+    void STDMETHODCALLTYPE MediaCollectionAttributeStringAdded( BSTR bstrAttribName, BSTR bstrAttribVal );
+    void STDMETHODCALLTYPE MediaCollectionAttributeStringRemoved( BSTR bstrAttribName, BSTR bstrAttribVal );
     void STDMETHODCALLTYPE MediaCollectionAttributeStringChanged( BSTR bstrAttribName, BSTR bstrOldAttribVal, BSTR bstrNewAttribVal);
     void STDMETHODCALLTYPE PlaylistCollectionChange();
     void STDMETHODCALLTYPE PlaylistCollectionPlaylistAdded( BSTR bstrPlaylistName);
@@ -93,15 +97,15 @@ END_COM_MAP()
     void STDMETHODCALLTYPE MouseUp( short nButton, short nShiftState, long fX, long fY );
 
 private:
-    void         ReleaseCore();
-	void		 GrowlSong();
+    void ReleaseCore();
+    void GrowlSong();
 
-    CComPtr<IWMPCore>           m_spCore;
-    CComPtr<IConnectionPoint>   m_spConnectionPoint;
-    DWORD                       m_dwAdviseCookie;
-	GrowlClient					m_growlClient;
-	CString						m_lastPlayedSourceURL;
-	bool						m_growlClientRegistered;
+    CComPtr<IWMPCore> m_spCore;
+    CComPtr<IConnectionPoint> m_spConnectionPoint;
+    DWORD m_dwAdviseCookie;
+    GrowlClient m_growlClient;
+    CString m_lastPlayedSourceURL;
+    bool m_growlClientRegistered;
 };
 
 #endif //__WMPGNTP_H_

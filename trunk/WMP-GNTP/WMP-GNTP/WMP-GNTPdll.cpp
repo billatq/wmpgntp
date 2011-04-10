@@ -9,7 +9,7 @@
 
 CComModule _Module;
 
-BEGIN_OBJECT_MAP(ObjectMap)
+BEGIN_OBJECT_MAP( ObjectMap)
 OBJECT_ENTRY(CLSID_WMPGNTP, CWMPGNTP)
 END_OBJECT_MAP()
 
@@ -22,13 +22,13 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*lpReserved*/)
         DisableThreadLibraryCalls(hInstance);
     }
     else if (dwReason == DLL_PROCESS_DETACH)
-        _Module.Term();
-    return TRUE;    // ok
+    _Module.Term();
+    return TRUE; // ok
 }
 
 STDAPI DllCanUnloadNow(void)
 {
-    return (_Module.GetLockCount()==0) ? S_OK : S_FALSE;
+    return (_Module.GetLockCount() == 0) ? S_OK : S_FALSE;
 }
 
 STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv)
@@ -47,7 +47,6 @@ STDAPI DllRegisterServer(void)
     return hr;
 }
 
-
 STDAPI DllUnregisterServer(void)
 {
     HRESULT hr = _Module.UnregisterServer();
@@ -57,5 +56,4 @@ STDAPI DllUnregisterServer(void)
 
     return hr;
 }
-
 
