@@ -22,21 +22,6 @@ HRESULT GrowlResource::InitWithFilePath(const CString &Path)
 
 const int GrowlClient::DefaultGrowlPort = 23053;
 
-// Adapted from http://msdn.microsoft.com/en-us/library/bb530743(VS.85).aspx
-/*
- HRESULT GrowlClient::Close()
- {
- int iResult = shutdown(m_connSocket, SD_SEND);
- if (iResult == SOCKET_ERROR) {
- //printf("shutdown failed: %d\n", WSAGetLastError());
- closesocket(m_connSocket);
- m_connSocket = NULL;
- return E_FAIL;
- }
- return S_OK;
- }
- */
-
 HRESULT GrowlClient::Register(const GrowlRegistration &Registration)
 {
     m_growlRegistration = Registration;
@@ -149,64 +134,6 @@ SOCKET GrowlClient::GetSocketXP(const CString &NodeName,
 SOCKET GrowlClient::GetSocket(const CString &NodeName, const CString &PortName)
 {
     return GetSocketXP(NodeName, PortName);
-    /*
-     // Sigh, one of these days..
-     SOCKET ConnSocket;
-     int ipv6only = 0;
-     int iResult;
-     BOOL bSuccess;
-     SOCKADDR_STORAGE LocalAddr = {0};
-     SOCKADDR_STORAGE RemoteAddr = {0};
-     DWORD dwLocalAddr = sizeof(LocalAddr);
-     DWORD dwRemoteAddr = sizeof(RemoteAddr);
-
-     // Create a Socket
-     ConnSocket = socket(
-     AF_INET6,
-     SOCK_STREAM,
-     0);
-
-     if (ConnSocket == INVALID_SOCKET)
-     {
-     return INVALID_SOCKET;
-     }
-
-     // Enable the Socket for both IPv4 and IPv6
-     iResult = setsockopt(
-     ConnSocket,
-     IPPROTO_IPV6,
-     IPV6_V6ONLY,
-     (char*)&ipv6only,
-     sizeof(ipv6only));
-
-     if (iResult == SOCKET_ERROR)
-     {
-     closesocket(ConnSocket);
-     return INVALID_SOCKET;
-     }
-
-     // Open up the socket
-     // WSAConnectByName only supported in Vista or Higher
-     bSuccess = WSAConnectByName(
-     ConnSocket,
-     (LPWSTR)(LPCWSTR)NodeName,
-     (LPWSTR)(LPCWSTR)PortName,
-     &dwLocalAddr,
-     (SOCKADDR*)&LocalAddr,
-     &dwRemoteAddr,
-     (SOCKADDR*)&RemoteAddr,
-     NULL,
-     NULL);
-
-     if (bSuccess)
-     {
-     return ConnSocket;
-     }
-     else
-     {
-     return INVALID_SOCKET;
-     }
-     */
 }
 
 // TODO: Actually parse instead of just reading
@@ -346,23 +273,9 @@ bool GrowlClient::WriteStringToSocket(const CString &Text)
 {
     CString writeString;
     writeString.Format(L"%s\r\n", Text);
-    //int iResult = send(m_connSocket, (const char*)(LPCTSTR)writeString, writeString.GetLength(), 0);
 
     CStringA strUTF8 = Util::GetUTF8String(writeString);
 
-    /*
-     // Convert to UTF8
-     CStringA strUTF8;
-     int iChars = AtlUnicodeToUTF8(writeString, writeString.GetLength(), NULL, 0);
-     if (iChars > 0)
-     {
-     LPSTR pszUTF8 = strUTF8.GetBuffer(iChars);
-     AtlUnicodeToUTF8(writeString, writeString.GetLength(), pszUTF8, iChars);
-     strUTF8.ReleaseBuffer(iChars);
-     }
-     */
-
-    //int iResult = send(m_connSocket, (const char *)writeString.GetBuffer(writeString.GetLength()), writeString.GetLength() * sizeof(TCHAR) + 1, 0);
     // We don't want to send null characters after each write, so we truncate the buffer at one minus the actual contents
     int iResult = send(m_connSocket,
             (const char *) strUTF8.GetBuffer(strUTF8.GetLength()),
